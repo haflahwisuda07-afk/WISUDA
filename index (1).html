@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panitia Haflah dan Wisuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Tata letak: header + tab di atas, satu kolom konten yang rapi di HP dan melebar di desktop */
+:root{
+  --bg:#f4f6f3; --card:#ffffff; --ink:#16231f; --muted:#5d6b66;
+  --brand:#0f4c45; --brand-ink:#ffffff; --accent:#d99a1e; --line:#dbe2dd;
+  --good:#1f7a4d; --bad:#b3372b;
+  --font-d:"Bricolage Grotesque","Segoe UI",sans-serif; --font-b:"Source Sans 3","Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1815; --card:#17231f; --ink:#e8efeb; --muted:#9fb0a9; --brand:#3aa391; --brand-ink:#08201b; --accent:#e8b24a; --line:#2a3b35; --good:#4cc38a; --bad:#ef7d70; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0f1815; --card:#17231f; --ink:#e8efeb; --muted:#9fb0a9; --brand:#3aa391; --brand-ink:#08201b; --accent:#e8b24a; --line:#2a3b35; --good:#4cc38a; --bad:#ef7d70; color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--font-b);}
+h1,h2,h3{font-family:var(--font-d);margin:0;text-wrap:balance;line-height:1.2}
+h2{font-size:1.3rem}
+h3{font-size:1.02rem}
+header{background:var(--brand);color:var(--brand-ink);padding:14px 16px}
+.bar{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{font-size:1.2rem}
+.brand small{opacity:.9}
+.who{display:flex;align-items:center;gap:10px;font-size:.9rem;flex-wrap:wrap}
+#saveStat{font-size:.8rem;opacity:.95}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.tabs{max-width:1000px;margin:0 auto;display:flex;gap:2px;padding:0 8px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:12px 12px;font:600 .95rem var(--font-b);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 56px}
+.grid{display:grid;gap:14px}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.tile .lbl{color:var(--muted);font-size:.85rem}
+.tile .val{font:700 1.5rem var(--font-d);font-variant-numeric:tabular-nums}
+.tile .sub{color:var(--muted);font-size:.85rem}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:8px;padding:9px 14px;font:600 .95rem var(--font-b);cursor:pointer}
+.btn.ghost{background:transparent;color:inherit;border:1px solid currentColor}
+.btn.small{padding:5px 9px;font-size:.85rem}
+header .btn.ghost{color:var(--brand-ink)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn.outline{background:transparent;color:var(--ink);border:1px solid var(--line)}
+label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted)}
+input,select,textarea{font:1rem var(--font-b);padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0;width:100%}
+textarea{resize:vertical;line-height:1.45}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{justify-content:space-between}
+.pagehead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;color:var(--muted);font-weight:600;white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.nw{white-space:nowrap}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.8rem;font-weight:600;border:1px solid var(--line);white-space:nowrap}
+.pill.ok{color:var(--good);border-color:var(--good)} .pill.wait{color:var(--accent);border-color:var(--accent)} .pill.now{color:var(--brand-ink);background:var(--brand);border-color:var(--brand)}
+.muted{color:var(--muted)}
+.note{border-left:4px solid var(--accent);background:var(--card);padding:10px 14px;border-radius:6px;font-size:.9rem;margin-bottom:16px}
+.ev{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:start;margin-bottom:10px}
+.ev .db{background:var(--brand);color:var(--brand-ink);border-radius:8px;text-align:center;padding:6px 2px;line-height:1.1}
+.ev .db b{display:block;font:700 1.4rem var(--font-d)}
+.ev .db span{font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+.ev.past{opacity:.6}
+.ev h3{margin-bottom:2px}
+.ev .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){.ev{grid-template-columns:56px 1fr}.ev .acts{grid-column:1/-1;justify-content:flex-start}}
+.grp{margin:22px 0 10px;font-size:.85rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;font-family:var(--font-b);font-weight:600}
+.org{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.org ul{list-style:none;margin:8px 0 0;padding:0}
+.org li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.org li span.k{color:var(--muted);font-size:.82rem;text-align:right}
+.chead{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+details.jd{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+details.jd>summary{cursor:pointer;padding:12px 16px;font:600 1rem var(--font-d);list-style-position:inside}
+details.jd .body{padding:0 16px 14px}
+details.jd ol{margin:6px 0 10px;padding-left:22px}
+details.jd ol ul{margin:4px 0;padding-left:18px}
+details.jd li{margin:3px 0}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:20px;max-width:520px;width:calc(100% - 24px);max-height:92vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog form{display:grid;gap:12px}
+.err{color:var(--bad);min-height:1.2em;font-size:.9rem}
+.hint{font-size:.8rem;color:var(--muted)}
+.empty{padding:18px;text-align:center;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:.9rem;max-width:90%;z-index:50;display:none}
+.fgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><h1>Panitia Haflah dan Wisuda</h1><small>Pondok Pesantren Mamba'ul Huda · TA 1447–1448 H / 2026–2027 M</small></div>
+  <div class="who"><span id="saveStat" aria-live="polite"></span><span id="whoLabel">Pengunjung</span><button class="btn ghost small" id="authBtn" type="button">Masuk</button></div>
+</div></header>
+<nav><div class="tabs" role="tablist" id="tabs"></div></nav>
+<main id="view"></main>
+<div id="toast" role="status"></div>
+<datalist id="ketList"></datalist>
+
+<dialog id="loginDlg">
+  <form id="loginForm">
+    <h2>Masuk panitia</h2>
+    <label for="roleSel">Peran
+      <select id="roleSel">
+        <option value="sekretaris">Sekretaris</option>
+        <option value="bendahara_putra">Bendahara Putra</option>
+        <option value="bendahara_putri">Bendahara Putri</option>
+        <option value="admin">Admin (akses semua)</option>
+      </select>
+    </label>
+    <label for="pwIn">Kata sandi
+      <input id="pwIn" type="password" autocomplete="current-password">
+    </label>
+    <div class="err" id="loginErr" role="alert"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn outline" type="button" id="cancelLogin">Batal</button>
+      <button class="btn" type="submit" id="loginGo">Masuk</button>
+    </div>
+    <p class="hint" id="loginHint" style="margin:0"></p>
+  </form>
+</dialog>
+
+<dialog id="formDlg">
+  <form id="formEl">
+    <h2 id="formTitle"></h2>
+    <div id="formFields" style="display:grid;gap:12px"></div>
+    <div class="err" id="formErr" role="alert"></div>
+    <div class="row spread">
+      <button class="btn danger" type="button" id="formDel" hidden>Hapus</button>
+      <span class="row" style="margin-left:auto">
+        <button class="btn outline" type="button" id="formCancel">Batal</button>
+        <button class="btn" type="submit">Simpan</button>
+      </span>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+"use strict";
+
+/* ====== PENGATURAN ======
+   Setelah Apps Script dipasang, tempel alamat Web app-nya di antara tanda kutip di bawah.
+   Kosong = mode uji coba (data hanya tersimpan di perangkat ini, kata sandi semua peran: demo). */
+var CONFIG={API_URL:""};
+
+var SEED={"agenda": [{"id": "ag1", "nama": "Madin Fest Putra", "mulai": "2026-12-04", "selesai": "2026-12-06", "hijriah": "24–26 Jumadil Akhir 1448 H"}, {"id": "ag2", "nama": "Madin Fest Putri", "mulai": "2026-12-05", "selesai": "2026-12-07", "hijriah": "25–27 Jumadil Akhir 1448 H"}, {"id": "ag3", "nama": "Bazar Rakyat", "mulai": "2026-12-14", "selesai": "2026-12-15", "hijriah": "5–6 Rajab 1448 H"}, {"id": "ag4", "nama": "Sema'an Al-Qur'an (Putri)", "mulai": "2026-12-13", "selesai": "2026-12-13", "hijriah": "4 Rajab 1448 H"}, {"id": "ag5", "nama": "Sema'an Al-Qur'an (Putra)", "mulai": "2026-12-14", "selesai": "2026-12-14", "hijriah": "5 Rajab 1448 H"}, {"id": "ag6", "nama": "Haul KH. Abdul Majid & Masyayikh ke-41", "mulai": "2026-12-15", "selesai": "2026-12-15", "hijriah": "6 Rajab 1448 H"}, {"id": "ag7", "nama": "Ziarah Wali Banyuwangi", "mulai": "2026-12-27", "selesai": "2026-12-27", "hijriah": "17 Rajab 1448 H"}, {"id": "ag8", "nama": "Koreksian Kitab Umum & Muhafadhoh Umum Madrasah Diniyyah Miftahul Huda", "mulai": "2027-01-02", "selesai": "2027-01-03", "hijriah": "23–24 Rajab 1448 H"}, {"id": "ag9", "nama": "Ujian Semester Genap Madrasah Diniyyah Miftahul Huda", "mulai": "2027-01-14", "selesai": "2027-01-21", "hijriah": "6–13 Sya'ban 1448 H"}, {"id": "ag10", "nama": "Semarak Khotaman Santri", "mulai": "2027-01-21", "selesai": "2027-01-21", "hijriah": "14 Sya'ban 1448 H"}, {"id": "ag11", "nama": "Kerja Bakti Santri", "mulai": "2027-01-22", "selesai": "2027-01-22", "hijriah": "15 Sya'ban 1448 H"}, {"id": "ag12", "nama": "Haflah Akhirussanah Yayasan Pondok Pesantren Mamba'ul Huda", "mulai": "2027-01-30", "selesai": "2027-01-30", "hijriah": "22 Sya'ban 1448 H"}, {"id": "ag13", "nama": "Wisuda Siswa-Siswi Madrasah Diniyyah Miftahul Huda", "mulai": "2027-01-31", "selesai": "2027-01-31", "hijriah": "23 Sya'ban 1448 H"}, {"id": "ag14", "nama": "Panggung Apresiasi Siswa-Siswi Madrasah Diniyyah Miftahul Huda", "mulai": "2027-01-31", "selesai": "2027-01-31", "hijriah": "23 Sya'ban 1448 H"}], "struktur": [{"id": "g1", "judul": "DEWAN PENASEHAT", "item": [{"id": "j1_1", "jabatan": "Yayasan Pondok Pesantren Mamba'ul Huda", "anggota": []}, {"id": "j1_2", "jabatan": "Dewan Pengasuh Pondok Pesantren Mamba'Ul Huda", "anggota": []}]}, {"id": "g2", "judul": "PENANGGUNG JAWAB", "item": [{"id": "j2_1", "jabatan": "Kepala Yayasan", "anggota": [{"nama": "Agus M. Ulin Nuha", "ket": ""}]}, {"id": "j2_2", "jabatan": "Kepala Sekolah", "anggota": [{"nama": "Bapak Nur Hadi Ervan", "ket": "Mudir 'Am"}, {"nama": "Bapak Ahmad Fauzan", "ket": "Mudir Satu"}, {"nama": "Bapak Mizan Sya'roni", "ket": "Mudir Dua"}]}]}, {"id": "g3", "judul": "DEWAN HARIAN", "item": [{"id": "j3_1", "jabatan": "Ketua 1", "anggota": [{"nama": "M. Muhyiddin Alwafiyi Zahid", "ket": ""}]}, {"id": "j3_2", "jabatan": "Ketua 2", "anggota": [{"nama": "As'adana Wafiroh", "ket": ""}]}, {"id": "j3_3", "jabatan": "Sekretaris 1", "anggota": [{"nama": "Moch Ulwan Naja Anjani", "ket": ""}]}, {"id": "j3_4", "jabatan": "Sekretaris 2", "anggota": [{"nama": "Nurlin Najwa", "ket": ""}]}, {"id": "j3_5", "jabatan": "Bendahara 1", "anggota": [{"nama": "Haedar Akbar", "ket": ""}]}, {"id": "j3_6", "jabatan": "Bendahara 2", "anggota": [{"nama": "Siti Lailatul Badriyah", "ket": ""}]}]}, {"id": "g4", "judul": "DEWAN PLENO", "item": [{"id": "j4_1", "jabatan": "Sie. Keuangan (Kelas)", "anggota": [{"nama": "M. Zia Al-Haq", "ket": "1 ULA PA A"}, {"nama": "Mahsin Maimun Muhammad", "ket": "1 ULA PA B"}, {"nama": "M. In'amul Aufa", "ket": "1 ULA PA C"}, {"nama": "M. Raffel Wahyu Pratama", "ket": "1 ULA PA D"}, {"nama": "Randy Julian Ramadhani", "ket": "1 ULA PA E"}, {"nama": "M. Kholilul Hamdih", "ket": "1 ULA PA F"}, {"nama": "A. Syauqi Ulum", "ket": "2 ULA PA A"}, {"nama": "A. Saiful Rohman", "ket": "2 ULA PA B"}, {"nama": "M. Rafa Azka Zamzami", "ket": "2 ULA PA C"}, {"nama": "M. Rozan Al-Ayubi", "ket": "2 ULA PA D"}, {"nama": "M. Rosyid Alifan Baidlowi", "ket": "2 ULA PA E"}, {"nama": "Latiful Mubarok", "ket": "3 ULA PA A"}, {"nama": "M. Afaaja Wijdan", "ket": "3 ULA PA B"}, {"nama": "Renda Aji Mashuri", "ket": "3 ULA PA C"}, {"nama": "M. Zidan Fawaid", "ket": "3 ULA PA D"}, {"nama": "Haizul Ma'ali", "ket": "4 ULA PA A"}, {"nama": "Yazid Khoirun Nuha", "ket": "4 ULA PA B"}, {"nama": "Yusron Kholid", "ket": "4 ULA PA C"}, {"nama": "Satriyo Ramadhanu", "ket": "1 WUSTHO PA A"}, {"nama": "A. Rifky Musyarrof", "ket": "1 WUSTHO PA B"}, {"nama": "M. Nurul Ihsani", "ket": "1 WUSTHO PA C"}, {"nama": "Ibnu Febri Hardiansyah", "ket": "2 WUSTHO PA A"}, {"nama": "M. Ngibadulloh Nadzrotuz Zaman", "ket": "2 WUSTHO PA B"}, {"nama": "M. Khoirul Anas", "ket": "1 ULYA PA A"}, {"nama": "M. Fathan Fauzi Arifqi", "ket": "2 ULYA PA A"}, {"nama": "Zahrotus Sholikhah", "ket": "1 ULA PI G"}, {"nama": "Bilqis 'Aina Almahya", "ket": "1 ULA PI H"}, {"nama": "Dewi Alfiatur", "ket": "1 ULA PI I"}, {"nama": "Risma Alfi", "ket": "1 ULA PI J"}, {"nama": "Rachma Sinta", "ket": "1 ULA PI K"}, {"nama": "Afidya Nikmatur", "ket": "1 ULA PI L"}, {"nama": "Khusnul Khotimah", "ket": "1 ULA PI M"}, {"nama": "Indah Fitriyani", "ket": "2 ULA PI F"}, {"nama": "Faizul Hilmi", "ket": "2 ULA PI G"}, {"nama": "Filzatul Akhza", "ket": "2 ULA PI H"}, {"nama": "Zainia Hawi Halwa", "ket": "2 ULA PI I"}, {"nama": "Zahrotun Najwa", "ket": "2 ULA PI J"}, {"nama": "Aninda Lisya", "ket": "2 ULA PI K"}, {"nama": "Bunga Cinta", "ket": "3 ULA PI E"}, {"nama": "Yanti Febri", "ket": "3 ULA PI F"}, {"nama": "Dwi Azkia Putri", "ket": "3 ULA PI G"}, {"nama": "Jihan Ayu", "ket": "3 ULA PI H"}, {"nama": "Risda Hafsari", "ket": "3 ULA PI I"}, {"nama": "Nabila Dewi Rsp", "ket": "3 ULA PI J"}, {"nama": "Ayu Nur Mukaromah", "ket": "3 ULA PI K"}, {"nama": "Ade Cinta", "ket": "4 ULA PI D"}, {"nama": "Faza Shofiana", "ket": "4 ULA PI E"}, {"nama": "Kayla Safira", "ket": "4 ULA PI F"}, {"nama": "Cahya Nailatul Niza", "ket": "4 ULA PI G"}, {"nama": "Ety Bustami", "ket": "1 WUSTHO PI D"}, {"nama": "Sofiana Amel Putri", "ket": "1 WUSTHO PI E"}, {"nama": "Marsya Qolbi", "ket": "1 WUSTHO PI F"}, {"nama": "Anisatu Mahmudah", "ket": "1 WUSTHO PI G"}, {"nama": "Dinda Fatimah", "ket": "2 WUSTHO PI C"}, {"nama": "Meylani Naila Fidus", "ket": "2 WUSTHO PI D"}, {"nama": "Rum Afifatuz Zuhrufin", "ket": "2 WUSTHO PI E"}, {"nama": "Indah Kurniyawati", "ket": "1 ULYA PI B"}, {"nama": "Fatimatuz Zahro", "ket": "2 ULYA PI B"}]}, {"id": "j4_2", "jabatan": "Sie. Acara", "anggota": [{"nama": "Abdul Khamid Sulton (U1)", "ket": "Putra"}, {"nama": "Agung Insani (U1)", "ket": "Putra"}, {"nama": "Akmalul Khuluqi (U1)", "ket": "Putra"}, {"nama": "Nihayatus Sa'adah (U1)", "ket": "Putri"}, {"nama": "Nisaul Hasanah (U1)", "ket": "Putri"}, {"nama": "Alya Mulya Pratama (U1)", "ket": "Putri"}, {"nama": "Lana Qorina Ghozali (U3)", "ket": "Putri"}, {"nama": "Ami Novita Haqiqi (U1)", "ket": "Putri"}]}, {"id": "j4_3", "jabatan": "Sie. Sound System", "anggota": [{"nama": "Zidni Aly Sadaya (U1)", "ket": ""}, {"nama": "Bapak Bahir", "ket": ""}, {"nama": "Kafi Ali Murtadlo (U1)", "ket": ""}, {"nama": "Imam Murobbi Ulin Nuha (U1)", "ket": ""}]}, {"id": "j4_4", "jabatan": "Sie. Perlengkapan", "anggota": [{"nama": "M. Alvin Fadhilah (U1)", "ket": "Putra"}, {"nama": "Rizal Kuniawan (U1)", "ket": "Putra"}, {"nama": "Zakia Nur Hidayah (U1)", "ket": "Putri"}, {"nama": "Lilik Nur Rohmah (U1)", "ket": "Putri"}]}, {"id": "j4_5", "jabatan": "Sie. Media", "anggota": [{"nama": "Hari Subaktiar (U1)", "ket": ""}, {"nama": "Labib Irfan (U4)", "ket": ""}, {"nama": "Ilham Daroini (U3)", "ket": ""}]}, {"id": "j4_6", "jabatan": "Sie. Dekorasi", "anggota": [{"nama": "Rahman Fadhillah Zamzam (U7)", "ket": ""}, {"nama": "Maftuh Hannan", "ket": ""}, {"nama": "Miftachul huda (U1)", "ket": ""}]}, {"id": "j4_7", "jabatan": "Sie. Humas", "anggota": [{"nama": "Yazid Masruri (U1)", "ket": ""}, {"nama": "Alan Fatih (U1)", "ket": ""}]}, {"id": "j4_8", "jabatan": "Sie. Peladen", "anggota": [{"nama": "M. Khusni Ramadani (U1)", "ket": "Putra"}, {"nama": "Nadin Sahda Risqi (U1)", "ket": "Putra"}, {"nama": "Siti Hanik Rohmatin (U1)", "ket": "Putri"}, {"nama": "Jihan Sobah Mas'udah (U1)", "ket": "Putri"}, {"nama": "Azza Muayya Hafidhoh (U1)", "ket": "Putri"}]}, {"id": "j4_9", "jabatan": "Sie. Konsumsi", "anggota": [{"nama": "Ifa Kurnia (U1)", "ket": ""}, {"nama": "Lusiana Kholis Amalia (U1)", "ket": ""}, {"nama": "Yuliana Safitri (U1)", "ket": ""}, {"nama": "Ulfatur Rosyidah (U1)", "ket": ""}, {"nama": "Farah Fitria Rahma (U1)", "ket": ""}, {"nama": "Maulidatul Masruroh (U2)", "ket": ""}]}, {"id": "j4_10", "jabatan": "Sie. Keamanan", "anggota": [{"nama": "I'lam Dinulloh (U1)", "ket": "Putra"}, {"nama": "M. Ali Mahsun (U1)", "ket": "Putra"}, {"nama": "Haedar Akbar (u1)", "ket": "Putra"}, {"nama": "Kunti Syarifah (U3)", "ket": "Putri"}, {"nama": "Rofiqotul Ulya (U1)", "ket": "Putri"}]}, {"id": "j4_11", "jabatan": "Sie. Kebersihan", "anggota": [{"nama": "M. Miftahul Ulum (U1)", "ket": "Putra"}, {"nama": "Fathan Fauzi (U1)", "ket": "Putra"}, {"nama": "Ali Haedar (U1)", "ket": "Putra"}, {"nama": "Semua siswa tamatan", "ket": ""}, {"nama": "Anisatu Khoirun Nisa (U1)", "ket": "Putri"}, {"nama": "Nia Lutfiah (U1)", "ket": "Putri"}]}]}], "jobdesk": [{"id": "jd1", "kelompok": "PENGARAH", "judul": "PENASEHAT", "tugas": ["Mengingatkan dan memberi nasehat kepada semua panitia perihal tugas-tugasnya;", "Memonitoring dan mengevaluasi serta memberi motivasi kepada semua panitia."]}, {"id": "jd2", "kelompok": "PENGARAH", "judul": "PENANGGUNG JAWAB", "tugas": ["Merumuskan, menetapkan dan mengembangkan tujuan acara;", "Merumuskan, menetapkan rencana kerja kegiatan dan rencana anggaran;", "Mencarikan solusi untuk setiap permasalahan yang dihadapi panitia;", "Mengevaluasi kinerja & sturktur panitia."]}, {"id": "jd3", "kelompok": "PENGARAH", "judul": "PEMBINA", "tugas": ["Mengingatkan dan mengarahkan panitia bidang tertentu perihal tugas-tugas;", "Mencarikan solusi untuk setiap permasalahan yang dihadapi panitia bidang tertentu;", "Memonitoring dan mengevaluasi serta memberikan motivasi kepada panitia bidang tertentu."]}, {"id": "jd4", "kelompok": "DEWAN HARIAN", "judul": "KETUA 1", "tugas": ["Bertanggungjawab atas hal yang berkaitan dengan kepanitiaan Haflah, Wisuda dan Panggung Apresiasi;", "Ikut mengawasi keuangan bersama keuangan Bendahara 1", "Menerima intruksi dari atasan dan disampaikan kepada anggota untuk dimusyawarohkan dan dilaksanakan;", "Memberikan saran, bimbingan dan pemecah masalah yang sulit dalam kepanitian;", "Memimpin rapat dalam forum pantia;", "Menyusun kalender kerja serta anggaran belanja;", "Menjadi koordinator sekretaris dan bendahara;", "Membuat Laporan Pertanggungjawaban."]}, {"id": "jd5", "kelompok": "DEWAN HARIAN", "judul": "KETUA 2", "tugas": ["Bertanggungjawab atas hal yang berkaitan dengan kepanitiaan Haflah, Wisuda dan Panggung Apresiasi putri;", "Ikut mengawasi keuangan bersama bendahara 2", "Menerima intruksi dari atasan dan disampaikan kepada anggota untuk dimusyawarohkan dan dilaksanakan;", "Memberikan saran, bimbingan dan pemecah masalah yang sulit dalam kepanitian putri;", "Memimpin rapat dalam forum pantia putri;", "Menyusun kalender kerja serta anggaran belanja;", "Menjadi koordinator bendahara 2;", "Melaporkan setiap kegiatan yang dikoordinir kepada ketua 1;", "Membuat Laporan Pertanggungjawaban."]}, {"id": "jd6", "kelompok": "DEWAN HARIAN", "judul": "SEKRETARIS 1", "tugas": ["Mengatur administrasi Haflah, Wisuda dan Panggung Apresiasi secara umum;", "Menjadi MC dan Notulis setiap rapat;", "Menyiapkan materi dan absensi rapat;", "Mengonsep dan membuat surat serta menyampaikan kepada pihak yang bersangkutan;", "Mencatat data keluar masuknya surat;", "Mengonsep undangan", "Mencatat dana yang dikeluarkan;", "Menyetorkan undangan ke Humas, 3 hari sebelum hari H;", "Menyusun Laporan Pertanggungjawaban."]}, {"id": "jd7", "kelompok": "DEWAN HARIAN", "judul": "SEKRETARIS 2", "tugas": ["Mengatur adminstrasi Haflah, Wisuda dan Panggung Apresiasi putri;", "Menjadi MC dan Notulis setiap rapat;", "Menyiapkan materi dan absensi rapat;", "Mengonsep dan membuat surat serta menyampaikan kepada pihak yang bersangkutan;", "Mencatat data keluar masuknya surat bila dibutuhkan;", "Mencatat dana yang dikeluarkan;", "Menyetorkan undangan ke Humas, 3 hari sebelum hari H;", "Menyusun Laporan Pertanggungjawaban."]}, {"id": "jd8", "kelompok": "DEWAN HARIAN", "judul": "BENDAHARA 1", "tugas": ["Bertanggungjawab atas keuangan Haflah, Wisuda dan Panggung Apresiasi secara umum;", "Bertanggungjawab dan mencatat keluar masuknya keuangan;", "Merekap keuangan Haflah, Wisuda, Jariyyah dan Ziaroh;", "Menerima pembayaran dari Sie. Keuangan;", "Mengambil uang dari ketua kelas tiap seminggu sekali;", "Menyalurkan uang kepada bidang-bidang tertentu, sesuai anggaran yang telah ditetapkan atas persetujuan Ketua 1;", "Memberikan alat bukti pembayaran;", "Membuat Laporan Pertanggungjawaban keuangan."]}, {"id": "jd9", "kelompok": "DEWAN HARIAN", "judul": "BENDAHARA 2", "tugas": ["Bertanggungjawab atas keuangan Haflah, Wisuda dan Panggung Apresiasi secara umum;", "Bertanggungjawab dan mencatat keluar masuknya keuangan;", "Merekap keuangan Haflah, Wisuda, Seragam, Jariyyah dan Ziaroh;", "Menerima pembayaran dari Sie. Keuangan putri;", "Mengambil uang dari ketua kelas tiap seminggu sekali;", "Memberikan alat bukti pembayaran;", "Menyetorkan keuangan kepada bendahara 1;", "Membuat Laporan Pertanggungjawaban keuangan."]}, {"id": "jd10", "kelompok": "DEWAN PLENO", "judul": "SIE. KEUANGAN", "tugas": ["Mengusahakan kekompakan pembayaran secara umum;", "Mengambil dan menerima pembayaran dari santri umum dan tamatan;", "Memberikan alat bukti pembayaran;", "Melaporkan dan menyetorkan setiap seminggu sekali."]}, {"id": "jd11", "kelompok": "DEWAN PLENO", "judul": "SIE. ACARA", "tugas": ["Bertanggungjawab atas kesuksesan acara secara umum;", "Mengatur susunan Haflah, Wisuda dan Panggung Apresiasi;", "Mengawal persiapan penampilan dan mengordinir pengisi acara;", "Membuat denah lokasi acara bersama dewan harian;", "Mencatat realita acara;", "Mempersiapkan kebutuhan yang berkaitan dengan acara bersama Sie. Perlengkapan;", "Merekrut tenaga bantu bila dibutuhkan."]}, {"id": "jd12", "kelompok": "DEWAN PLENO", "judul": "SIE. HUMAS", "tugas": ["Menyampaikan surat dan informasi kepada yang bersangkutan (tidak boleh dititipkan);", "Mensukseskan perizinan dalam setiap acara."]}, {"id": "jd13", "kelompok": "DEWAN PLENO", "judul": "SIE. PERLENGKAPAN", "tugas": ["Ikut serta menyiapkan dan melengkapi semua fasilitas yang dibutuhkan dalam acara, meliputi:", "- Tarup sesuai denah yang dibutuhkan, gerabah, meja, kursi, lighting, kipas angin, dan keperluan lain;", "Meminjam, merawat dan mengembalikan barang pinjaman dari tiap acara;", "Berkordinasi dengan Sie. Ro’an dalam memenuhi barang barang tersebut;", "Bertanggungjawab terhadap pendanaan yang berkaitan dengan perlengkapan dan melaporkanya kepda bendahara;", "Merekrut tenaga bantu bila dibutuhkan."]}, {"id": "jd14", "kelompok": "DEWAN PLENO", "judul": "SIE. MEDIA", "tugas": ["Mendokumentasikan setiap kegiatan yang berkaitan dengan acara, meliputi :", "- Dokumentasi acara dan pra-acara;", "- Menyiapkan live streaming Haflah, Wisuda dan Panggung Apresiasi;", "- Menyiapkan layar/proyektor sesuai denah yang dibutuhkan.", "Bertanggungjawab terhadap pendanaan yang berkaitan dengan media dan melaporkannya kepada bendahara;", "Mempublikasikan hasil dokumentasi acara."]}, {"id": "jd15", "kelompok": "DEWAN PLENO", "judul": "SIE. DEKORASI", "tugas": ["Bertanggungjawab terhadap dekorasi Haflah, Wisuda dan Panggung Apresiasi, meliputi :", "- Backdrop, taman dan kolam.", "Mencari tenaga bantu bila dibutuhkan."]}, {"id": "jd16", "kelompok": "DEWAN PLENO", "judul": "SIE. KEAMANAN", "tugas": ["Menjaga keamanan dan ketertiban secara umum;", "Menentukan lokasi parkir tamu undangan;", "Menjaga keamanan yang ada di tempat parkir;", "Menjaga Kemananan baik pra maupun acara inti;", "Ikut serta menertibkan santri dalam setiap acara."]}, {"id": "jd17", "kelompok": "DEWAN PLENO", "judul": "SIE. SOUND SYSTEM", "tugas": ["Bertanggungjawab atas seluruh pengeras suara secara umum;", "Menyiapkan pengeras suara sesuai denah yang dibutuhkan;", "Bertanggungjawab terhadap pendanaan sound system dan melaporkannya kepada bendahara;", "Menjaga, merawat dan mengembalikan seluruh kebutuhan pengeras suara."]}, {"id": "jd18", "kelompok": "DEWAN PLENO", "judul": "SIE. KONSUMSI", "tugas": ["Bertanggungjawab terhadap pendanaan yang berkaitan dengan konsumsi Haflah, Wisuda dan Panggung Apresiasi;", "Mengatur semua pembelanjaan dapur;", "Mengusahakan hidangan baik pra maupun acara inti, mulai dari prasmanan, berkat, suguhan, dan perewang acara;", "Bekerja sama dengan Sie. Peladen Haflah, Wisuda dan Panggung Apresiasi."]}, {"id": "jd19", "kelompok": "DEWAN PLENO", "judul": "SIE. PELADEN", "tugas": ["Bertanggungjawab atas pelayanan Haflah, Wisuda dan Panggung Apresiasi;", "Membentuk dan membagi tim peladen, meliputi : peladen panggung, peladen tarup, peladen dapur, peladen prasmanan, peladen distributor berkat;", "Bekerja sama dengan Sie. Konsumsi dalam pengadaan berkat dan seluruh hidangan maupun suguhan."]}, {"id": "jd20", "kelompok": "DEWAN PLENO", "judul": "SIE. PELADEN – Peladen Panggung", "tugas": ["Bertanggungjawab atas duguhan panggung;", "Bertanggungjawab atas berkat dan parcel tamu undangan."]}, {"id": "jd21", "kelompok": "DEWAN PLENO", "judul": "SIE. PELADEN – Peladen Prasmanan", "tugas": ["Memilah tamu undangan VIP dan VVIP;", "Mengontrol dan menyiapkan hidangan;", "Membagi berkat VVIP."]}, {"id": "jd22", "kelompok": "DEWAN PLENO", "judul": "SIE. TERIMA TAMU", "tugas": ["Menyambut kedatangan tamu undangan;", "Memilah tamu VIP dan NON VIP;", "Mengarahkan tamu VIP dan VVIP ke tempat yang telah disediakan;", "Menghitung jumlah tamu undangan."]}, {"id": "jd23", "kelompok": "DEWAN PLENO", "judul": "SIE. RO’AN ( KEBERSIHAN )", "tugas": ["Bertanggungjawab atas seluruh ro’an yang berkaitan dengan acara, meliputi :", "- Bersih-bersih lokasi acara;", "- Bersih-bersih lokasi parkir;", "- Menata kursi dan beberan acara Haflah, Wisuda dan Panggung Apresiasi.", "Bertanggungjawab terhadap pendanaan yang berkaitan dengan ro’an dan melaporkannya kepada bendahara;", "Memasang banner dan baliho acara di lokasi yang sudah di tentukan;", "Merekrut tenaga bantu dari santri tamatan dan membagi job kerja petugas yang berkaitan."]}, {"id": "jd24", "kelompok": "DEWAN PLENO", "judul": "SIE. BAZAR ?", "tugas": []}], "jurnal_putra": [], "jurnal_putri": []};
+var KEYS=["agenda","struktur","jobdesk","jurnal_putra","jurnal_putri"];
+var EDITORS={agenda:["sekretaris"],struktur:["sekretaris"],jobdesk:["sekretaris"],jurnal_putra:["bendahara_putra"],jurnal_putri:["bendahara_putri"]};
+var ROLE_LABEL={sekretaris:"Sekretaris",bendahara_putra:"Bendahara Putra",bendahara_putri:"Bendahara Putri",admin:"Admin"};
+var DEMO=!CONFIG.API_URL;
+var DEMO_KEY="wh-demo-v2";
+var BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+var BLN=["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+var HARI=["Ahad","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"];
+var KODE=[["a","Uang masuk pembayaran utuh PA"],["b","Uang masuk pembayaran utuh PI"],["c","Uang masuk pembayaran anak ke-2 dst."],
+ ["1","Rapat & Kesekretariatan"],["2","Khataman Al-Qur'an"],["3","Istighotsah"],["4","Ro'an/Kerja Bakti"],["5","Dekorasi Acara"],
+ ["6","Dokumentasi Acara"],["7","Akomodasi & Perlengkapan"],["8","Konsumsi"],["9","Ucapan Terimakasih"],["10","Lain-Lain"],["11","Pembubaran"]];
+var KET_SARAN=["Konsumsi Acara","Tasyakur Santri Umum","Muballigh","Sholawat","Umum/Seragam Guru","Bisyaroh Pengasuh","Perewang","Pekerja","Kayu Bakar","Rokok Acara","Lain-lain","Air Mineral Acara"];
+var PAGES=[["beranda","Beranda"],["agenda","Agenda"],["struktur","Struktur Panitia"],["jobdesk","Job Desk"],["kas-putra","Kas Putra"],["kas-putri","Kas Putri"]];
+
+var state={}, revs={}, dirty={}, saving={}, timers={}, session=null, pw=null, current="beranda", strukturQ="", needRender=false;
+
+/* ====== Helper ====== */
+function $(id){return document.getElementById(id)}
+function el(tag,attrs,kids){
+  var n=document.createElement(tag);
+  for(var k in (attrs||{})){
+    if(k==="class")n.className=attrs[k];
+    else if(k==="text")n.textContent=attrs[k];
+    else if(k.slice(0,2)==="on")n.addEventListener(k.slice(2),attrs[k]);
+    else n.setAttribute(k,attrs[k]);
+  }
+  (kids||[]).forEach(function(c){if(c!=null)n.appendChild(typeof c==="string"?document.createTextNode(c):c)});
+  return n;
+}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function rp(n){return "Rp "+Math.round(Number(n)||0).toLocaleString("id-ID")}
+function pd(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?new Date(+m[1],+m[2]-1,+m[3]):null}
+function todayD(){var d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function dayDiff(a,b){return Math.round((b-a)/86400000)}
+function todayISO(){var d=todayD();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function fmtRange(m,s){
+  var a=pd(m),b=pd(s||m)||a; if(!a)return "";
+  var ha=HARI[a.getDay()],hb=HARI[b.getDay()];
+  if(+a===+b)return ha+", "+a.getDate()+" "+BULAN[a.getMonth()]+" "+a.getFullYear();
+  if(a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear())return ha+"–"+hb+", "+a.getDate()+"–"+b.getDate()+" "+BULAN[a.getMonth()]+" "+a.getFullYear();
+  var ya=a.getFullYear()!==b.getFullYear()?" "+a.getFullYear():"";
+  return ha+", "+a.getDate()+" "+BULAN[a.getMonth()]+ya+" – "+hb+", "+b.getDate()+" "+BULAN[b.getMonth()]+" "+b.getFullYear();
+}
+function toast(msg){var t=$("toast");t.textContent=msg;t.style.display="block";clearTimeout(toast._t);toast._t=setTimeout(function(){t.style.display="none"},4200)}
+function canEdit(key){return !!session&&(session==="admin"||EDITORS[key].indexOf(session)>=0)}
+function setStat(t,cls){var s=$("saveStat");s.textContent=t||"";s.style.color=cls==="bad"?"#ffd2cc":""}
+
+/* ====== Penyimpanan ====== */
+function loadDemo(){
+  try{var r=localStorage.getItem(DEMO_KEY);if(r){var o=JSON.parse(r);KEYS.forEach(function(k){if(Array.isArray(o[k]))state[k]=o[k]})}}catch(e){}
+}
+function initState(){KEYS.forEach(function(k){state[k]=clone(SEED[k])});if(DEMO)loadDemo()}
+
+function fetchAll(silent){
+  if(DEMO)return Promise.resolve();
+  if(!silent)setStat("Memuat data…");
+  return fetch(CONFIG.API_URL+(CONFIG.API_URL.indexOf("?")<0?"?":"&")+"t="+Date.now())
+   .then(function(r){return r.json()})
+   .then(function(j){
+     if(!j||!j.ok)throw new Error("bad");
+     var changed=false;
+     KEYS.forEach(function(k){
+       var d=j.data&&j.data[k];
+       if(d&&Array.isArray(d.value)&&!dirty[k]&&!saving[k]&&revs[k]!==d.rev){state[k]=d.value;revs[k]=d.rev;changed=true}
+     });
+     setStat(silent?$("saveStat").textContent:"");
+     if(!silent||changed)softRender();
+   })
+   .catch(function(){setStat("Tidak bisa memuat data terbaru","bad")});
+}
+function softRender(){ if($("formDlg").open||$("loginDlg").open){needRender=true}else render() }
+
+function persist(key){
+  if(DEMO){
+    try{localStorage.setItem(DEMO_KEY,JSON.stringify(state))}catch(e){}
+    setStat("Tersimpan di perangkat ini");return;
+  }
+  dirty[key]=true;setStat("Menyimpan…");
+  clearTimeout(timers[key]);timers[key]=setTimeout(function(){flush(key)},500);
+}
+function flush(key){
+  if(saving[key]){dirty[key]=true;return}
+  saving[key]=true;dirty[key]=false;
+  var body=JSON.stringify({action:"save",key:key,rev:revs[key]||"",value:state[key],role:session,password:pw});
+  fetch(CONFIG.API_URL,{method:"POST",body:body})
+   .then(function(r){return r.json()})
+   .then(function(j){
+     saving[key]=false;
+     if(j.ok){revs[key]=j.rev;if(dirty[key]){flush(key)}else setStat("✓ Tersimpan");return}
+     if(j.error==="conflict"){dirty[key]=false;toast("Data baru saja diubah orang lain. Data dimuat ulang, silakan ulangi perubahan.");revs[key]="";fetchAll(true).then(function(){fetchForce(key)});return}
+     if(j.error==="unauthorized"||j.error==="forbidden"){logout(true);toast("Sesi tidak valid. Silakan masuk lagi.");return}
+     dirty[key]=true;setStat("Gagal menyimpan ("+j.error+")","bad");
+   })
+   .catch(function(){saving[key]=false;dirty[key]=true;setStat("Gagal menyimpan, mencoba lagi…","bad");clearTimeout(timers[key]);timers[key]=setTimeout(function(){flush(key)},6000)});
+}
+function fetchForce(key){
+  fetch(CONFIG.API_URL+(CONFIG.API_URL.indexOf("?")<0?"?":"&")+"t="+Date.now()).then(function(r){return r.json()}).then(function(j){
+    var d=j.data&&j.data[key];if(d&&Array.isArray(d.value)){state[key]=d.value;revs[key]=d.rev;dirty[key]=false;setStat("");softRender()}
+  }).catch(function(){});
+}
+
+/* ====== Masuk / keluar ====== */
+function openLogin(){
+  $("pwIn").value="";$("loginErr").textContent="";
+  $("loginHint").textContent=DEMO?"Mode uji coba: kata sandi semua peran adalah demo.":"";
+  $("loginDlg").showModal();$("pwIn").focus();
+}
+function setSession(r,p){
+  session=r;pw=p;
+  try{if(r){sessionStorage.setItem("wh-role",r);sessionStorage.setItem("wh-pw",p||"")}else{sessionStorage.removeItem("wh-role");sessionStorage.removeItem("wh-pw")}}catch(e){}
+}
+function logout(silent){setSession(null,null);render();if(!silent)toast("Anda sudah keluar")}
+$("cancelLogin").addEventListener("click",function(){$("loginDlg").close()});
+$("loginDlg").addEventListener("close",function(){if(needRender){needRender=false;render()}});
+$("loginForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var r=$("roleSel").value,p=$("pwIn").value;
+  if(!p){$("loginErr").textContent="Isi kata sandi.";return}
+  var done=function(){setSession(r,p);$("loginDlg").close();toast("Masuk sebagai "+ROLE_LABEL[r]);render()};
+  if(DEMO){if(p==="demo")done();else $("loginErr").textContent="Kata sandi salah.";return}
+  $("loginGo").disabled=true;$("loginErr").textContent="Memeriksa…";
+  fetch(CONFIG.API_URL,{method:"POST",body:JSON.stringify({action:"login",role:r,password:p})})
+   .then(function(x){return x.json()})
+   .then(function(j){$("loginGo").disabled=false;if(j.ok)done();else $("loginErr").textContent="Peran atau kata sandi salah."})
+   .catch(function(){$("loginGo").disabled=false;$("loginErr").textContent="Tidak bisa terhubung. Periksa internet lalu coba lagi."});
+});
+$("authBtn").addEventListener("click",function(){if(session)logout();else openLogin()});
+
+/* ====== Dialog formulir umum ====== */
+function openForm(o){
+  var fe=$("formFields");fe.textContent="";$("formErr").textContent="";$("formTitle").textContent=o.title;
+  var ins={};
+  o.fields.forEach(function(f){
+    var id="f_"+f.k,inp;
+    if(f.type==="select"){inp=el("select",{id:id});f.options.forEach(function(op){inp.appendChild(el("option",{value:op[0],text:op[1]}))})}
+    else if(f.type==="textarea"){inp=el("textarea",{id:id,rows:String(f.rows||6)})}
+    else{inp=el("input",{id:id,type:f.type||"text"});if(f.step)inp.setAttribute("step",f.step);if(f.min!=null)inp.setAttribute("min",f.min);if(f.list)inp.setAttribute("list",f.list)}
+    if(f.required)inp.required=true;
+    inp.value=o.values[f.k]==null?"":o.values[f.k];
+    ins[f.k]=inp;
+    var wrap=el("label",{for:id},[f.label,inp]);
+    if(f.hint)wrap.appendChild(el("span",{class:"hint",text:f.hint}));
+    fe.appendChild(wrap);
+  });
+  var del=$("formDel");del.hidden=!o.onDelete;del.textContent="Hapus";del.dataset.arm="";
+  del.onclick=function(){
+    if(del.dataset.arm!=="1"){del.dataset.arm="1";del.textContent="Yakin hapus?";return}
+    $("formDlg").close();o.onDelete();
+  };
+  $("formCancel").onclick=function(){$("formDlg").close()};
+  $("formEl").onsubmit=function(e){
+    e.preventDefault();
+    var v={};o.fields.forEach(function(f){v[f.k]=ins[f.k].value});
+    var msg=o.onSave(v);
+    if(msg){$("formErr").textContent=msg;return}
+    $("formDlg").close();
+  };
+  if(o.onInit)o.onInit(ins);
+  $("formDlg").showModal();
+}
+$("formDlg").addEventListener("close",function(){if(needRender){needRender=false;render()}});
+
+/* ====== Tab dan halaman ====== */
+function renderTabs(){
+  var t=$("tabs");t.textContent="";
+  PAGES.forEach(function(p){
+    t.appendChild(el("button",{class:"tab",role:"tab","aria-selected":String(current===p[0]),type:"button",text:p[1],onclick:function(){go(p[0])}}));
+  });
+  $("whoLabel").textContent=session?("Masuk: "+ROLE_LABEL[session]):"Pengunjung (hanya baca)";
+  $("authBtn").textContent=session?"Keluar":"Masuk";
+}
+function go(p){
+  current=p;
+  try{if(location.hash!=="#"+p)history.replaceState(null,"","#"+p)}catch(e){}
+  render();window.scrollTo(0,0);
+}
+function render(){
+  renderTabs();
+  var v=$("view");v.textContent="";
+  var f={beranda:vBeranda,agenda:vAgenda,struktur:vStruktur,jobdesk:vJobdesk,"kas-putra":function(v){vKas(v,"jurnal_putra","Putra")},"kas-putri":function(v){vKas(v,"jurnal_putri","Putri")}}[current]||vBeranda;
+  f(v);
+}
+function head(title,key,addLabel,onAdd){
+  var h=el("div",{class:"pagehead"},[el("h2",{text:title})]);
+  if(canEdit(key)&&onAdd)h.appendChild(el("button",{class:"btn",type:"button",text:addLabel,onclick:onAdd}));
+  return h;
+}
+function editNote(key){
+  var who=EDITORS[key].map(function(r){return ROLE_LABEL[r]}).join(", ");
+  if(canEdit(key))return el("div",{class:"note",text:"Anda masuk sebagai "+ROLE_LABEL[session]+" dan bisa mengubah bagian ini. Perubahan tersimpan otomatis."});
+  return el("div",{class:"note",text:"Bagian ini bisa dilihat semua orang. Yang bisa mengubah: "+who+" (atau Admin)."});
+}
+
+/* ---- Beranda ---- */
+function eventStatus(e){
+  var t=todayD(),a=pd(e.mulai),b=pd(e.selesai||e.mulai)||a;
+  if(!a)return {t:"",c:"",past:false};
+  if(t<a){var n=dayDiff(t,a);return {t:n===1?"Besok":n+" hari lagi",c:"wait",past:false,days:n}}
+  if(t<=b)return {t:"Berlangsung",c:"now",past:false,days:0};
+  return {t:"Selesai",c:"ok",past:true};
+}
+function sortedAgenda(){return state.agenda.slice().sort(function(a,b){return (a.mulai+(a.selesai||"")).localeCompare(b.mulai+(b.selesai||""))})}
+function saldoOf(key){return state[key].reduce(function(s,r){var j=Math.round(Number(r.vol)*Number(r.harga))||0;return s+(r.jenis==="Masuk"?j:-j)},0)}
+function vBeranda(v){
+  if(DEMO)v.appendChild(el("div",{class:"note",text:"Mode uji coba: data hanya tersimpan di perangkat ini dan tidak dibagikan ke panitia lain. Kata sandi semua peran: demo."}));
+  v.appendChild(el("h2",{text:"Selamat datang",style:"margin-bottom:6px"}));
+  v.appendChild(el("p",{class:"muted",style:"margin:0 0 16px",text:"Pusat informasi panitia Haflah Akhirussanah, Wisuda, dan Panggung Apresiasi. Semua orang bisa melihat agenda, struktur, job desk, dan catatan kas. Mengubah data hanya bisa dilakukan oleh peran yang berwenang."}));
+  var ag=sortedAgenda();
+  var haflah=ag.filter(function(e){return /haflah/i.test(e.nama)&&/akhirussanah/i.test(e.nama)})[0];
+  var nxt=ag.filter(function(e){return !eventStatus(e).past})[0];
+  var g=el("div",{class:"grid tiles",style:"margin-bottom:18px"});
+  function tile(l,val,sub,cls){return el("div",{class:"card tile"},[el("div",{class:"lbl",text:l}),el("div",{class:"val "+(cls||""),text:val}),sub?el("div",{class:"sub",text:sub}):null])}
+  if(haflah){var s=eventStatus(haflah);g.appendChild(tile("Haflah Akhirussanah",s.past?"Selesai":(s.days===0?"Hari ini":s.days+" hari lagi"),fmtRange(haflah.mulai,haflah.selesai)))}
+  if(nxt){var s2=eventStatus(nxt);g.appendChild(tile("Kegiatan berikutnya",s2.t,nxt.nama))}
+  g.appendChild(tile("Saldo kas Putra",rp(saldoOf("jurnal_putra")),"Lihat tab Kas Putra",saldoOf("jurnal_putra")<0?"bad":""));
+  g.appendChild(tile("Saldo kas Putri",rp(saldoOf("jurnal_putri")),"Lihat tab Kas Putri",saldoOf("jurnal_putri")<0?"bad":""));
+  v.appendChild(g);
+  var up=ag.filter(function(e){return !eventStatus(e).past}).slice(0,4);
+  if(up.length){
+    v.appendChild(el("h3",{text:"Agenda terdekat",style:"margin-bottom:8px"}));
+    up.forEach(function(e){v.appendChild(evCard(e,false))});
+  }
+}
+
+/* ---- Agenda ---- */
+function evCard(e,edit){
+  var a=pd(e.mulai),s=eventStatus(e);
+  var db=el("div",{class:"db"},[el("b",{text:a?String(a.getDate()):"–"}),el("span",{text:a?BLN[a.getMonth()]:""})]);
+  var mid=el("div",{},[el("h3",{text:e.nama}),el("div",{text:fmtRange(e.mulai,e.selesai)}),el("div",{class:"muted",text:e.hijriah||""})]);
+  var acts=el("div",{class:"acts"},[el("span",{class:"pill "+s.c,text:s.t})]);
+  if(edit)acts.appendChild(el("button",{class:"btn outline small",type:"button",text:"Ubah",onclick:function(){formAgenda(e)}}));
+  return el("div",{class:"card ev"+(s.past?" past":"")},[db,mid,acts]);
+}
+function formAgenda(e){
+  var isNew=!e;
+  openForm({title:isNew?"Tambah kegiatan":"Ubah kegiatan",
+    fields:[{k:"nama",label:"Nama kegiatan",required:true},{k:"mulai",label:"Tanggal mulai",type:"date",required:true},
+            {k:"selesai",label:"Tanggal selesai",type:"date",hint:"Kosongkan jika hanya satu hari."},{k:"hijriah",label:"Tanggal Hijriah",hint:"Contoh: 22 Sya'ban 1448 H"}],
+    values:e||{mulai:todayISO()},
+    onSave:function(v){
+      var o={id:e?e.id:uid(),nama:v.nama.trim(),mulai:v.mulai,selesai:v.selesai||v.mulai,hijriah:v.hijriah.trim()};
+      if(!o.nama)return "Nama kegiatan wajib diisi.";
+      if(o.selesai<o.mulai)return "Tanggal selesai tidak boleh sebelum tanggal mulai.";
+      if(isNew)state.agenda.push(o);else state.agenda[state.agenda.indexOf(e)]=o;
+      persist("agenda");render();
+    },
+    onDelete:isNew?null:function(){state.agenda.splice(state.agenda.indexOf(e),1);persist("agenda");render()}
+  });
+}
+function vAgenda(v){
+  v.appendChild(head("Agenda kegiatan","agenda","+ Tambah kegiatan",function(){formAgenda(null)}));
+  v.appendChild(editNote("agenda"));
+  var ag=sortedAgenda();
+  if(!ag.length)v.appendChild(el("div",{class:"card empty",text:"Belum ada kegiatan."}));
+  ag.forEach(function(e){v.appendChild(evCard(e,canEdit("agenda")))});
+}
+
+/* ---- Struktur panitia ---- */
+function formJabatan(g,it){
+  var isNew=!it;
+  openForm({title:isNew?"Tambah jabatan di "+g.judul:"Ubah "+it.jabatan,
+    fields:[{k:"jabatan",label:"Jabatan atau seksi",required:true},
+            {k:"anggota",label:"Anggota",type:"textarea",rows:8,hint:"Satu orang per baris. Boleh diberi keterangan setelah tanda |, contoh: Agung Insani | Putra"}],
+    values:it?{jabatan:it.jabatan,anggota:it.anggota.map(function(a){return a.ket?a.nama+" | "+a.ket:a.nama}).join("\n")}:{},
+    onSave:function(v){
+      var ang=v.anggota.split("\n").map(function(l){return l.trim()}).filter(Boolean).map(function(l){var i=l.indexOf("|");return i<0?{nama:l,ket:""}:{nama:l.slice(0,i).trim(),ket:l.slice(i+1).trim()}});
+      var o={id:it?it.id:uid(),jabatan:v.jabatan.trim(),anggota:ang};
+      if(!o.jabatan)return "Jabatan wajib diisi.";
+      if(isNew)g.item.push(o);else g.item[g.item.indexOf(it)]=o;
+      persist("struktur");render();
+    },
+    onDelete:isNew?null:function(){g.item.splice(g.item.indexOf(it),1);persist("struktur");render()}
+  });
+}
+function fillStruktur(box){
+  box.textContent="";
+  var q=strukturQ.trim().toLowerCase(),edit=canEdit("struktur"),shown=0;
+  state.struktur.forEach(function(g){
+    var items=g.item.filter(function(it){
+      if(!q)return true;
+      return it.jabatan.toLowerCase().indexOf(q)>=0||it.anggota.some(function(a){return (a.nama+" "+a.ket).toLowerCase().indexOf(q)>=0});
+    });
+    if(!items.length&&!(edit&&!q))return;
+    box.appendChild(el("div",{class:"grp",text:g.judul}));
+    var org=el("div",{class:"org"});
+    items.forEach(function(it){
+      var ul=el("ul");
+      it.anggota.forEach(function(a){ul.appendChild(el("li",{},[el("span",{text:a.nama}),a.ket?el("span",{class:"k",text:a.ket}):null]))});
+      var hd=el("div",{class:"chead"},[el("h3",{text:it.jabatan})]);
+      if(edit)hd.appendChild(el("button",{class:"btn outline small",type:"button",text:"Ubah","aria-label":"Ubah "+it.jabatan,onclick:function(){formJabatan(g,it)}}));
+      org.appendChild(el("div",{class:"card"},[hd,it.anggota.length?ul:null]));
+      shown++;
+    });
+    box.appendChild(org);
+    if(edit&&!q)box.appendChild(el("button",{class:"btn outline small",type:"button",style:"margin-top:10px",text:"+ Tambah jabatan di "+g.judul,onclick:function(){formJabatan(g,null)}}));
+  });
+  if(!shown&&q)box.appendChild(el("div",{class:"card empty",text:"Tidak ada nama atau jabatan yang cocok."}));
+}
+function vStruktur(v){
+  v.appendChild(head("Struktur panitia","struktur"));
+  v.appendChild(editNote("struktur"));
+  var s=el("input",{type:"search",placeholder:"Cari nama, kelas, atau seksi…","aria-label":"Cari di struktur panitia",value:strukturQ});
+  var box=el("div");
+  s.addEventListener("input",function(){strukturQ=s.value;fillStruktur(box)});
+  v.appendChild(s);v.appendChild(box);fillStruktur(box);
+}
+
+/* ---- Job desk ---- */
+function formJob(c){
+  var isNew=!c;
+  openForm({title:isNew?"Tambah peran":"Ubah "+c.judul,
+    fields:[{k:"judul",label:"Nama peran atau seksi",required:true},
+            {k:"kelompok",label:"Kelompok",type:"select",options:[["PENGARAH","Pengarah"],["DEWAN HARIAN","Dewan Harian"],["DEWAN PLENO","Dewan Pleno"]]},
+            {k:"tugas",label:"Tugas",type:"textarea",rows:10,hint:"Satu tugas per baris. Awali dengan \"- \" untuk poin di bawah tugas sebelumnya."}],
+    values:c?{judul:c.judul,kelompok:c.kelompok,tugas:c.tugas.join("\n")}:{kelompok:"DEWAN PLENO"},
+    onSave:function(v){
+      var o={id:c?c.id:uid(),judul:v.judul.trim(),kelompok:v.kelompok,tugas:v.tugas.split("\n").map(function(l){return l.trim()}).filter(Boolean)};
+      if(!o.judul)return "Nama peran wajib diisi.";
+      if(isNew)state.jobdesk.push(o);else state.jobdesk[state.jobdesk.indexOf(c)]=o;
+      persist("jobdesk");render();
+    },
+    onDelete:isNew?null:function(){state.jobdesk.splice(state.jobdesk.indexOf(c),1);persist("jobdesk");render()}
+  });
+}
+function tugasList(tugas){
+  var ol=el("ol"),last=null;
+  tugas.forEach(function(t){
+    if(t.slice(0,2)==="- "&&last){
+      var ul=last.querySelector("ul")||last.appendChild(el("ul"));
+      ul.appendChild(el("li",{text:t.slice(2)}));
+    }else{last=el("li",{text:t.replace(/^- /,"")});ol.appendChild(last)}
+  });
+  return ol;
+}
+function vJobdesk(v){
+  v.appendChild(head("Job desk panitia","jobdesk","+ Tambah peran",function(){formJob(null)}));
+  v.appendChild(editNote("jobdesk"));
+  var all=[];
+  v.appendChild(el("div",{class:"row",style:"margin-bottom:6px"},[
+    el("button",{class:"btn outline small",type:"button",text:"Buka semua",onclick:function(){all.forEach(function(d){d.open=true})}}),
+    el("button",{class:"btn outline small",type:"button",text:"Tutup semua",onclick:function(){all.forEach(function(d){d.open=false})}})]));
+  ["PENGARAH","DEWAN HARIAN","DEWAN PLENO"].forEach(function(k){
+    var list=state.jobdesk.filter(function(c){return c.kelompok===k});
+    if(!list.length)return;
+    v.appendChild(el("div",{class:"grp",text:k}));
+    list.forEach(function(c){
+      var d=el("details",{class:"jd"});all.push(d);
+      d.appendChild(el("summary",{text:c.judul}));
+      var b=el("div",{class:"body"});
+      if(c.tugas.length)b.appendChild(tugasList(c.tugas));else b.appendChild(el("p",{class:"muted",text:"Tugas belum diisi."}));
+      if(canEdit("jobdesk"))b.appendChild(el("button",{class:"btn outline small",type:"button",text:"Ubah",onclick:function(){formJob(c)}}));
+      d.appendChild(b);v.appendChild(d);
+    });
+  });
+}
+
+/* ---- Kas ---- */
+function jumlah(r){return Math.round(Number(r.vol)*Number(r.harga))||0}
+function kodeOpts(){return KODE.map(function(k){return [k[0],k[0]+" — "+k[1]]})}
+function formKas(key,r){
+  var isNew=!r;
+  openForm({title:isNew?"Catat transaksi":"Ubah transaksi",
+    fields:[{k:"tanggal",label:"Tanggal",type:"date",required:true},
+            {k:"kode",label:"Kode transaksi",type:"select",options:kodeOpts()},
+            {k:"ket",label:"Keterangan",required:true,list:"ketList"},
+            {k:"jenis",label:"Jenis",type:"select",options:[["Masuk","Uang masuk"],["Keluar","Uang keluar"]]},
+            {k:"vol",label:"Volume",type:"number",step:"any",min:"0",required:true},
+            {k:"satuan",label:"Satuan",hint:"Contoh: orang, paket, lembar"},
+            {k:"harga",label:"Harga satuan (Rp)",type:"number",step:"1",min:"0",required:true}],
+    values:r||{tanggal:todayISO(),kode:"1",jenis:"Keluar",vol:1},
+    onInit:function(ins){ if(isNew)ins.kode.addEventListener("change",function(){ins.jenis.value=/^[abc]$/.test(ins.kode.value)?"Masuk":"Keluar"}) },
+    onSave:function(v){
+      var o={id:r?r.id:uid(),tanggal:v.tanggal,kode:v.kode,ket:v.ket.trim(),jenis:v.jenis,vol:Number(v.vol),satuan:v.satuan.trim(),harga:Math.round(Number(v.harga))};
+      if(!o.ket)return "Keterangan wajib diisi.";
+      if(!(o.vol>=0)||!(o.harga>=0))return "Volume dan harga harus berupa angka 0 atau lebih.";
+      if(isNew)state[key].push(o);else state[key][state[key].indexOf(r)]=o;
+      persist(key);render();
+    },
+    onDelete:isNew?null:function(){state[key].splice(state[key].indexOf(r),1);persist(key);render()}
+  });
+}
+function csvKas(key,label){
+  var rows=sortKas(key),saldo=0;
+  var q=function(s){s=String(s==null?"":s);if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
+  var out=[["No","Tanggal","Kode","Keterangan","Volume","Satuan","Harga satuan","Masuk","Keluar","Saldo"].map(q).join(",")];
+  rows.forEach(function(r,i){var j=jumlah(r),m=r.jenis==="Masuk"?j:0,k=r.jenis==="Masuk"?0:j;saldo+=m-k;out.push([i+1,r.tanggal,r.kode,r.ket,r.vol,r.satuan,r.harga,m,k,saldo].map(q).join(","))});
+  try{
+    var a=el("a",{href:URL.createObjectURL(new Blob(["﻿"+out.join("\r\n")],{type:"text/csv"})),download:"kas-"+label.toLowerCase()+".csv"});
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){toast("Unduhan tidak didukung di sini.")}
+}
+function sortKas(key){return state[key].slice().sort(function(a,b){return String(a.tanggal).localeCompare(String(b.tanggal))})}
+function vKas(v,key,label){
+  v.appendChild(head("Catatan keluar masuk · "+label,key,"+ Catat transaksi",function(){formKas(key,null)}));
+  v.appendChild(editNote(key));
+  var rows=sortKas(key),masuk=0,keluar=0;
+  rows.forEach(function(r){var j=jumlah(r);if(r.jenis==="Masuk")masuk+=j;else keluar+=j});
+  var sd=masuk-keluar,g=el("div",{class:"grid tiles",style:"margin-bottom:14px"});
+  [["Total masuk",rp(masuk),"good"],["Total keluar",rp(keluar),"bad"],["Saldo",rp(sd),sd<0?"bad":""]].forEach(function(t){
+    g.appendChild(el("div",{class:"card tile"},[el("div",{class:"lbl",text:t[0]}),el("div",{class:"val "+t[2],text:t[1]})]));
+  });
+  v.appendChild(g);
+  v.appendChild(el("div",{class:"row",style:"margin-bottom:8px;justify-content:flex-end"},[el("button",{class:"btn outline small",type:"button",text:"Unduh CSV",onclick:function(){csvKas(key,label)}})]));
+  var wrap=el("div",{class:"card tbl"});
+  if(!rows.length){wrap.appendChild(el("div",{class:"empty",text:"Belum ada transaksi."}))}
+  else{
+    var edit=canEdit(key),t=el("table"),hr=el("tr");
+    ["No","Tanggal","Kode","Keterangan","Volume","Satuan","Harga satuan","Masuk","Keluar","Saldo"].forEach(function(h,i){hr.appendChild(el("th",{class:i>=4&&i!==5?"num":"",text:h}))});
+    if(edit)hr.appendChild(el("th"));
+    t.appendChild(el("thead",{},[hr]));
+    var tb=el("tbody"),saldo=0;
+    rows.forEach(function(r,i){
+      var j=jumlah(r),m=r.jenis==="Masuk"?j:0,k=r.jenis==="Masuk"?0:j;saldo+=m-k;
+      var tr=el("tr",{},[el("td",{text:String(i+1)}),el("td",{class:"nw",text:(function(){var d=pd(r.tanggal);return d?d.getDate()+" "+BLN[d.getMonth()]+" "+d.getFullYear():r.tanggal})()}),
+        el("td",{text:r.kode}),el("td",{text:r.ket}),el("td",{class:"num",text:String(r.vol)}),el("td",{text:r.satuan||""}),
+        el("td",{class:"num",text:rp(r.harga)}),el("td",{class:"num good",text:m?rp(m):""}),el("td",{class:"num bad",text:k?rp(k):""}),
+        el("td",{class:"num"+(saldo<0?" bad":""),text:rp(saldo)})]);
+      if(edit)tr.appendChild(el("td",{},[el("button",{class:"btn outline small",type:"button",text:"Ubah","aria-label":"Ubah transaksi "+r.ket,onclick:function(){formKas(key,r)}})]));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);wrap.appendChild(t);
+  }
+  v.appendChild(wrap);
+  v.appendChild(el("p",{class:"hint",text:"Kode transaksi mengikuti buku bendahara: a, b, c untuk uang masuk; 1 sampai 11 untuk pengeluaran per pos."}));
+}
+
+/* ====== Mulai ====== */
+(function init(){
+  var dl=$("ketList");KET_SARAN.forEach(function(k){dl.appendChild(el("option",{value:k}))});
+  initState();
+  try{var r=sessionStorage.getItem("wh-role");if(r&&ROLE_LABEL[r]){session=r;pw=sessionStorage.getItem("wh-pw")||""}}catch(e){}
+  var h=(location.hash||"").replace("#","");
+  if(PAGES.some(function(p){return p[0]===h}))current=h;
+  window.addEventListener("hashchange",function(){var x=(location.hash||"").replace("#","");if(PAGES.some(function(p){return p[0]===x})&&x!==current){current=x;render()}});
+  render();
+  if(!DEMO){
+    fetchAll(false);
+    setInterval(function(){
+      var busy=KEYS.some(function(k){return dirty[k]||saving[k]});
+      if(!document.hidden&&!busy)fetchAll(true);
+    },90000);
+    document.addEventListener("visibilitychange",function(){if(!document.hidden)fetchAll(true)});
+  }
+})();
+})();
+</script>
+</body>
+</html>

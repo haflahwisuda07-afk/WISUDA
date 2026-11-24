@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panitia Wisuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Tata letak: header + tab di atas, satu kolom konten yang rapi di HP dan melebar di desktop */
+:root{
+  --bg:#f4f6f3; --card:#ffffff; --ink:#16231f; --muted:#5d6b66;
+  --brand:#0f4c45; --brand-ink:#ffffff; --accent:#d99a1e; --line:#dbe2dd;
+  --good:#1f7a4d; --bad:#b3372b;
+  --font-d:"Bricolage Grotesque","Segoe UI",sans-serif; --font-b:"Source Sans 3","Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1815; --card:#17231f; --ink:#e8efeb; --muted:#9fb0a9; --brand:#3aa391; --brand-ink:#08201b; --accent:#e8b24a; --line:#2a3b35; --good:#4cc38a; --bad:#ef7d70; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0f1815; --card:#17231f; --ink:#e8efeb; --muted:#9fb0a9; --brand:#3aa391; --brand-ink:#08201b; --accent:#e8b24a; --line:#2a3b35; --good:#4cc38a; --bad:#ef7d70; color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--font-b);}
+h1,h2,h3{font-family:var(--font-d);margin:0;text-wrap:balance;line-height:1.2}
+header{background:var(--brand);color:var(--brand-ink);padding:14px 16px}
+.bar{max-width:980px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand h1{font-size:1.25rem}
+.brand small{opacity:.85}
+.who{display:flex;align-items:center;gap:10px;font-size:.9rem}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.tabs{max-width:980px;margin:0 auto;display:flex;gap:4px;padding:0 8px;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:3px solid transparent;color:var(--muted);padding:12px 12px;font:600 .95rem var(--font-b);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+main{max-width:980px;margin:0 auto;padding:20px 16px 48px}
+.grid{display:grid;gap:14px}
+.tiles{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.tile .lbl{color:var(--muted);font-size:.85rem}
+.tile .val{font:700 1.6rem var(--font-d);font-variant-numeric:tabular-nums}
+.good{color:var(--good)} .bad{color:var(--bad)}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:8px;padding:9px 14px;font:600 .95rem var(--font-b);cursor:pointer}
+.btn.ghost{background:transparent;color:inherit;border:1px solid currentColor}
+.btn.small{padding:5px 9px;font-size:.85rem}
+header .btn.ghost{color:var(--brand-ink)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+form.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));align-items:end;margin-bottom:14px}
+label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted)}
+input,select{font:1rem var(--font-b);padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.8rem;font-weight:600;border:1px solid var(--line)}
+.pill.ok{color:var(--good);border-color:var(--good)} .pill.wait{color:var(--accent);border-color:var(--accent)}
+.sec{margin-bottom:22px}
+.sec>h2{margin-bottom:10px;font-size:1.2rem}
+.muted{color:var(--muted)}
+.note{border-left:4px solid var(--accent);background:var(--card);padding:10px 14px;border-radius:6px;font-size:.9rem;margin-bottom:18px}
+.org{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.org li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.org ul{list-style:none;margin:8px 0 0;padding:0}
+.role{color:var(--muted);font-size:.85rem}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:20px;max-width:360px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog form{display:grid;gap:12px}
+.err{color:var(--bad);min-height:1.2em;font-size:.9rem}
+.empty{padding:18px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><h1>Panitia Wisuda</h1><small>Sistem informasi internal panitia</small></div>
+  <div class="who"><span id="whoLabel">Pengunjung</span><button class="btn ghost small" id="authBtn" type="button">Masuk</button></div>
+</div></header>
+<nav><div class="tabs" role="tablist" id="tabs"></div></nav>
+<main id="view"></main>
+
+<dialog id="loginDlg">
+  <form id="loginForm" method="dialog">
+    <h2>Masuk panitia</h2>
+    <label for="roleSel">Peran
+      <select id="roleSel">
+        <option value="sekretariat">Sekretariat</option>
+        <option value="bendahara">Bendahara</option>
+        <option value="admin">Admin (akses semua)</option>
+      </select>
+    </label>
+    <label for="pinIn">PIN
+      <input id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="8">
+    </label>
+    <div class="err" id="loginErr" role="alert"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost" type="button" id="cancelLogin" style="color:var(--ink)">Batal</button>
+      <button class="btn" type="submit">Masuk</button>
+    </div>
+    <p class="muted" style="margin:0;font-size:.8rem">PIN contoh untuk uji coba: sekretariat 2222, bendahara 3333, admin 1111.</p>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  // ---------- Penyimpanan (hanya di browser ini; lihat catatan di halaman) ----------
+  var KEY="wisuda-demo-v1", mem=null;
+  var SEED={
+    members:[
+      {id:1,divisi:"Pengarah",nama:"Dr. Contoh Pengarah",jabatan:"Penasihat"},
+      {id:2,divisi:"Inti",nama:"Contoh Ketua",jabatan:"Ketua Panitia"},
+      {id:3,divisi:"Inti",nama:"Contoh Wakil",jabatan:"Wakil Ketua"},
+      {id:4,divisi:"Sekretariat",nama:"Contoh Sekretaris",jabatan:"Sekretaris"},
+      {id:5,divisi:"Keuangan",nama:"Contoh Bendahara",jabatan:"Bendahara"},
+      {id:6,divisi:"Acara",nama:"Contoh Koordinator",jabatan:"Koordinator Acara"}
+    ],
+    letters:[
+      {id:1,tanggal:"2026-11-20",jenis:"Surat keluar",perihal:"Undangan orang tua wisudawan",status:"Selesai"},
+      {id:2,tanggal:"2026-11-22",jenis:"Agenda",perihal:"Rapat panitia gladi bersih",status:"Menunggu"}
+    ],
+    tx:[
+      {id:1,tanggal:"2026-11-10",tipe:"Masuk",ket:"Iuran wisudawan (contoh)",jumlah:5000000},
+      {id:2,tanggal:"2026-11-15",tipe:"Keluar",ket:"Sewa gedung (contoh)",jumlah:2500000}
+    ],
+    nid:100
+  };
+  function load(){
+    try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
+    return mem||JSON.parse(JSON.stringify(SEED));
+  }
+  var db=load();
+  function save(){mem=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+
+  // ---------- Peran & hak akses ----------
+  var PINS={admin:"1111",sekretariat:"2222",bendahara:"3333"};
+  var LABEL={admin:"Admin",sekretariat:"Sekretariat",bendahara:"Bendahara"};
+  var session=null; // null = pengunjung
+  try{session=sessionStorage.getItem("wisuda-role")||null}catch(e){}
+  function can(page){
+    if(page==="beranda"||page==="struktur")return true;
+    if(session==="admin")return true;
+    return session===page; // sekretariat->sekretariat, bendahara->bendahara
+  }
+  function canEditStruktur(){return session==="admin"}
+
+  // ---------- Helper DOM (selalu textContent, bukan innerHTML) ----------
+  function el(tag,attrs,kids){
+    var n=document.createElement(tag);
+    for(var k in (attrs||{})){
+      if(k==="class")n.className=attrs[k];
+      else if(k==="text")n.textContent=attrs[k];
+      else if(k.slice(0,2)==="on")n.addEventListener(k.slice(2),attrs[k]);
+      else n.setAttribute(k,attrs[k]);
+    }
+    (kids||[]).forEach(function(c){if(c!=null)n.appendChild(typeof c==="string"?document.createTextNode(c):c)});
+    return n;
+  }
+  var rp=function(n){return "Rp "+Number(n).toLocaleString("id-ID")};
+  var tgl=function(s){var d=new Date(s+"T00:00:00");return isNaN(d)?s:d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})};
+  var today=function(){return new Date().toISOString().slice(0,10)};
+
+  // ---------- Tab ----------
+  var PAGES=[["beranda","Beranda"],["struktur","Struktur Panitia"],["sekretariat","Sekretariat"],["bendahara","Bendahara"]];
+  var current="beranda";
+  function renderTabs(){
+    var t=document.getElementById("tabs");t.textContent="";
+    PAGES.forEach(function(p){
+      var locked=!can(p[0]);
+      var b=el("button",{class:"tab",role:"tab","aria-selected":String(current===p[0]),type:"button",
+        text:p[1]+(locked?" 🔒":""),onclick:function(){go(p[0])}});
+      t.appendChild(b);
+    });
+    document.getElementById("whoLabel").textContent=session?("Masuk: "+LABEL[session]):"Pengunjung";
+    document.getElementById("authBtn").textContent=session?"Keluar":"Masuk";
+  }
+  function go(p){
+    current=p;
+    if(!can(p)){renderLocked(p);renderTabs();return}
+    renderTabs();
+    ({beranda:vBeranda,struktur:vStruktur,sekretariat:vSekretariat,bendahara:vBendahara})[p]();
+  }
+  function view(){var v=document.getElementById("view");v.textContent="";return v}
+
+  function renderLocked(p){
+    var v=view();
+    v.appendChild(el("div",{class:"card empty"},[
+      el("h2",{text:"Halaman terkunci"}),
+      el("p",{text:"Bagian "+LABEL[p]+" hanya bisa dibuka oleh "+LABEL[p]+" atau Admin."}),
+      el("button",{class:"btn",type:"button",text:"Masuk",onclick:openLogin})
+    ]));
+  }
+
+  // ---------- Beranda (publik) ----------
+  function vBeranda(){
+    var v=view();
+    v.appendChild(el("div",{class:"note",text:"Ini prototipe. Data tersimpan di browser perangkat ini saja dan PIN belum aman untuk dipakai sungguhan. Lihat penjelasan di chat."}));
+    var s=el("div",{class:"sec"});
+    s.appendChild(el("h2",{text:"Selamat datang"}));
+    s.appendChild(el("p",{class:"muted",text:"Halaman ini terbuka untuk umum: informasi acara dan struktur panitia. Bagian Sekretariat dan Bendahara hanya untuk panitia yang masuk dengan perannya."}));
+    v.appendChild(s);
+    var g=el("div",{class:"grid tiles"});
+    [["Anggota panitia",db.members.length],["Surat & agenda",can("sekretariat")?db.letters.length:"Terkunci"],
+     ["Saldo kas",can("bendahara")?rp(saldo()):"Terkunci"]].forEach(function(t){
+      g.appendChild(el("div",{class:"card tile"},[el("div",{class:"lbl",text:t[0]}),el("div",{class:"val",text:String(t[1])})]));
+    });
+    v.appendChild(g);
+  }
+
+  // ---------- Struktur (publik, edit hanya admin) ----------
+  function vStruktur(){
+    var v=view();
+    v.appendChild(el("h2",{text:"Struktur Panitia",style:"margin-bottom:14px"}));
+    if(canEditStruktur()){
+      var f=el("form",{class:"card row"});
+      var dv=el("input",{id:"mDiv",required:"required",placeholder:"mis. Acara"});
+      var nm=el("input",{id:"mNama",required:"required",placeholder:"Nama"});
+      var jb=el("input",{id:"mJab",required:"required",placeholder:"Jabatan"});
+      f.appendChild(el("label",{for:"mDiv"},["Divisi",dv]));
+      f.appendChild(el("label",{for:"mNama"},["Nama",nm]));
+      f.appendChild(el("label",{for:"mJab"},["Jabatan",jb]));
+      f.appendChild(el("button",{class:"btn",type:"submit",text:"Tambah anggota"}));
+      f.addEventListener("submit",function(e){e.preventDefault();
+        db.members.push({id:++db.nid,divisi:dv.value.trim(),nama:nm.value.trim(),jabatan:jb.value.trim()});
+        save();go("struktur");});
+      v.appendChild(f);
+    }
+    var groups={};db.members.forEach(function(m){(groups[m.divisi]=groups[m.divisi]||[]).push(m)});
+    var org=el("div",{class:"org"});
+    Object.keys(groups).forEach(function(d){
+      var ul=el("ul");
+      groups[d].forEach(function(m){
+        var li=el("li",{},[el("span",{},[el("strong",{text:m.nama}),el("div",{class:"role",text:m.jabatan})])]);
+        if(canEditStruktur())li.appendChild(el("button",{class:"btn danger small",type:"button",text:"Hapus","aria-label":"Hapus "+m.nama,onclick:function(){
+          db.members=db.members.filter(function(x){return x.id!==m.id});save();go("struktur")}}));
+        ul.appendChild(li);
+      });
+      org.appendChild(el("div",{class:"card"},[el("h3",{text:d}),ul]));
+    });
+    if(!db.members.length)org.appendChild(el("div",{class:"card empty",text:"Belum ada anggota."}));
+    v.appendChild(org);
+  }
+
+  // ---------- Sekretariat ----------
+  function vSekretariat(){
+    var v=view();
+    v.appendChild(el("h2",{text:"Sekretariat",style:"margin-bottom:14px"}));
+    var f=el("form",{class:"card row"});
+    var tg=el("input",{id:"lTgl",type:"date",value:today(),required:"required"});
+    var jn=el("select",{id:"lJenis"});["Surat masuk","Surat keluar","Agenda","Notulen"].forEach(function(x){jn.appendChild(el("option",{text:x}))});
+    var pr=el("input",{id:"lPer",required:"required",placeholder:"Perihal"});
+    f.appendChild(el("label",{for:"lTgl"},["Tanggal",tg]));
+    f.appendChild(el("label",{for:"lJenis"},["Jenis",jn]));
+    f.appendChild(el("label",{for:"lPer"},["Perihal",pr]));
+    f.appendChild(el("button",{class:"btn",type:"submit",text:"Tambah"}));
+    f.addEventListener("submit",function(e){e.preventDefault();
+      db.letters.unshift({id:++db.nid,tanggal:tg.value,jenis:jn.value,perihal:pr.value.trim(),status:"Menunggu"});
+      save();go("sekretariat");});
+    v.appendChild(f);
+    var wrap=el("div",{class:"card tbl"});
+    if(!db.letters.length){wrap.appendChild(el("div",{class:"empty",text:"Belum ada surat atau agenda."}))}
+    else{
+      var t=el("table");
+      t.appendChild(el("thead",{},[el("tr",{},["Tanggal","Jenis","Perihal","Status",""].map(function(h){return el("th",{text:h})}))]));
+      var tb=el("tbody");
+      db.letters.forEach(function(l){
+        var done=l.status==="Selesai";
+        tb.appendChild(el("tr",{},[
+          el("td",{text:tgl(l.tanggal)}),el("td",{text:l.jenis}),el("td",{text:l.perihal}),
+          el("td",{},[el("button",{class:"pill "+(done?"ok":"wait"),type:"button",style:"background:none;cursor:pointer",text:l.status,"aria-label":"Ubah status "+l.perihal,onclick:function(){
+            l.status=done?"Menunggu":"Selesai";save();go("sekretariat")}})]),
+          el("td",{},[el("button",{class:"btn danger small",type:"button",text:"Hapus","aria-label":"Hapus "+l.perihal,onclick:function(){
+            db.letters=db.letters.filter(function(x){return x.id!==l.id});save();go("sekretariat")}})])
+        ]));
+      });
+      t.appendChild(tb);wrap.appendChild(t);
+    }
+    v.appendChild(wrap);
+  }
+
+  // ---------- Bendahara ----------
+  function sum(tipe){return db.tx.filter(function(x){return x.tipe===tipe}).reduce(function(a,b){return a+b.jumlah},0)}
+  function saldo(){return sum("Masuk")-sum("Keluar")}
+  function vBendahara(){
+    var v=view();
+    v.appendChild(el("h2",{text:"Bendahara",style:"margin-bottom:14px"}));
+    var g=el("div",{class:"grid tiles",style:"margin-bottom:14px"});
+    var sd=saldo();
+    [["Pemasukan",rp(sum("Masuk")),"good"],["Pengeluaran",rp(sum("Keluar")),"bad"],["Saldo kas",rp(sd),sd<0?"bad":""]].forEach(function(t){
+      g.appendChild(el("div",{class:"card tile"},[el("div",{class:"lbl",text:t[0]}),el("div",{class:"val "+t[2],text:t[1]})]));
+    });
+    v.appendChild(g);
+    var f=el("form",{class:"card row"});
+    var tg=el("input",{id:"tTgl",type:"date",value:today(),required:"required"});
+    var tp=el("select",{id:"tTipe"});["Masuk","Keluar"].forEach(function(x){tp.appendChild(el("option",{text:x}))});
+    var kt=el("input",{id:"tKet",required:"required",placeholder:"Keterangan"});
+    var jm=el("input",{id:"tJml",type:"number",min:"1",step:"1",required:"required",placeholder:"Jumlah (Rp)",inputmode:"numeric"});
+    f.appendChild(el("label",{for:"tTgl"},["Tanggal",tg]));
+    f.appendChild(el("label",{for:"tTipe"},["Jenis",tp]));
+    f.appendChild(el("label",{for:"tKet"},["Keterangan",kt]));
+    f.appendChild(el("label",{for:"tJml"},["Jumlah",jm]));
+    f.appendChild(el("button",{class:"btn",type:"submit",text:"Catat"}));
+    f.addEventListener("submit",function(e){e.preventDefault();
+      var n=Math.round(Number(jm.value));if(!(n>0))return;
+      db.tx.unshift({id:++db.nid,tanggal:tg.value,tipe:tp.value,ket:kt.value.trim(),jumlah:n});
+      save();go("bendahara");});
+    v.appendChild(f);
+    var wrap=el("div",{class:"card tbl"});
+    if(!db.tx.length){wrap.appendChild(el("div",{class:"empty",text:"Belum ada transaksi."}))}
+    else{
+      var t=el("table");
+      t.appendChild(el("thead",{},[el("tr",{},[el("th",{text:"Tanggal"}),el("th",{text:"Keterangan"}),el("th",{text:"Jenis"}),el("th",{class:"num",text:"Jumlah"}),el("th")])]));
+      var tb=el("tbody");
+      db.tx.forEach(function(x){
+        var masuk=x.tipe==="Masuk";
+        tb.appendChild(el("tr",{},[
+          el("td",{text:tgl(x.tanggal)}),el("td",{text:x.ket}),
+          el("td",{},[el("span",{class:"pill "+(masuk?"ok":""),text:x.tipe,style:masuk?"":"color:var(--bad);border-color:var(--bad)"})]),
+          el("td",{class:"num "+(masuk?"good":"bad"),text:(masuk?"+":"−")+rp(x.jumlah)}),
+          el("td",{},[el("button",{class:"btn danger small",type:"button",text:"Hapus","aria-label":"Hapus "+x.ket,onclick:function(){
+            db.tx=db.tx.filter(function(y){return y.id!==x.id});save();go("bendahara")}})])
+        ]));
+      });
+      t.appendChild(tb);wrap.appendChild(t);
+    }
+    v.appendChild(wrap);
+  }
+
+  // ---------- Login ----------
+  var dlg=document.getElementById("loginDlg");
+  function openLogin(){
+    document.getElementById("pinIn").value="";document.getElementById("loginErr").textContent="";
+    if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","");
+    document.getElementById("pinIn").focus();
+  }
+  function closeLogin(){if(dlg.close)dlg.close();else dlg.removeAttribute("open")}
+  document.getElementById("cancelLogin").addEventListener("click",closeLogin);
+  document.getElementById("loginForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var r=document.getElementById("roleSel").value,p=document.getElementById("pinIn").value;
+    if(PINS[r]!==p){document.getElementById("loginErr").textContent="PIN salah. Coba lagi.";return}
+    session=r;try{sessionStorage.setItem("wisuda-role",r)}catch(x){}
+    closeLogin();
+    // arahkan ke halaman milik perannya
+    go(r==="admin"?"beranda":r);
+  });
+  document.getElementById("authBtn").addEventListener("click",function(){
+    if(session){session=null;try{sessionStorage.removeItem("wisuda-role")}catch(e){}go("beranda")}
+    else openLogin();
+  });
+
+  go("beranda");
+})();
+</script>
+</body>
+</html>
